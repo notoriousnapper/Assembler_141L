@@ -1,4 +1,7 @@
 
+
+
+
 ######### Internal Registers ###########
 i0 - Holds 0 Constant
 i1 - Holds 1 Constant
@@ -23,9 +26,51 @@ Constraints
   Rtype - usually stores in first operand (3 bit, so more operations)
         - Try to use lower registers first (r0-r3)
 
+        Constraints/ Things to Check For good assembly
+        1. 2nd register # doesn't not exceed 3.  ex)    mov r4 r5 != RIGHT
+        2. If you ever have register-use problems, follow this rule:
+           - Have one lower register (r0-r3) for problems
+        	 - To use for something like "add r7, r5"
+        	   instead use "mov r5, r2; add r7 r2;"
+
+Hammond Distance Sub Function
+1. XOR two bytes
+2. Begin Loop #1
+	 	See whole byte = 0, if so, exit and report
+	  Else, Is LSB 1?
+			If so, increment
+		Shift Right
+		Dynamic Instruction Count = 8 // Depends on the situation, but is cleaner
+
+		Alternative Loop #2
+	 	See whole byte = 0, if so, exit and report
+	  Else, Is MSB 1?
+			If so, increment
+		Shift Right
+			Sub A - 1
+			And A with (A-1)
+		Dynamic Instruction Count = 8 // Depends on the situation, but is cleaner
 
 
-Note:
-  mov instruction - moves from first reg to second, so control unit is different
-  mov_e
-  mov_ei is mov_e switched, from internal reg to external (r1 to i1)
+Algorithm:
+
+Load First Byte from Array from Memory location @ 128
+Begin OUTer Loop of Going through each array
+Begin INNER Loop of Comparing current byte to each byte in array (N^2 runtime)
+
+  // Load first array with counter @ Address 128
+	// Have 2 ptrs, one for inner loop, and one for outer loop, r0 and r1
+
+  // i0 for Holding 0
+  // i1 for Holding 1
+  // i2 (Free Reg) HOLDS 288 Stores end number for iterations 128 + 160
+  // i3 for Compares & mov_imm values
+
+  // r0 for PTR #1
+  // r1 for PTR #2
+	// r2
+  // r3 for temp Hammon
+  // r4 for Hammo
+  // r5 for outer byte
+  // r6 for inner byte
+  // r7 , re-use  // For PTR #1 reuse

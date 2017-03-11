@@ -57,14 +57,15 @@ def assembleMachineCode(words, theOutputFile):
 
     for word in words:
         #print("word: " + word)
-        if  word[len(word) - 1] == ","
+        if  word[len(word) - 1] == ",":
+          word = word.strip(",")  # Strips commas at end
+
+        if "//" in word:  #
             comment = True
 
         if not comment:
             newWords.append(word)
 
-        if "//" in word:   //
-            comment = True
     #print(len(newWords))
     wordCount = len(newWords)
 
@@ -103,8 +104,8 @@ def assembleMachineCode(words, theOutputFile):
         reg2 = registers[newWords[2]]
 
         theOutputFile.write(format(op, 'b').zfill(4))
-        theOutputFile.write(format(reg1, 'b').zfill(2))
-        theOutputFile.write(format(reg2, 'b').zfill(3))
+        theOutputFile.write(format(reg1, 'b').zfill(3))
+        theOutputFile.write(format(reg2, 'b').zfill(2))
         addComment(newWords)
         print("should print 4")
 

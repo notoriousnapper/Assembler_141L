@@ -5,17 +5,17 @@ def getOp(opCode):
     'and': 1,
     'cmp': 2,
     'mov': 3,
-    'mov_int': 4,
-    'load_inc': 5,
+    'mov_ei': 4,
+    'ld': 5,
     'st': 6,
     'xor': 7,
     'shf': 8,
-    'movi': 9,
+    'mov_imm': 9,
     'cmp_int': 10,
     'ba': 11,
     'ble': 12,
     'bne': 13,
-    'inc': 14,
+    'mov_ie': 14,
     'halt': 15
     }
     return ohmylord[opCode]
