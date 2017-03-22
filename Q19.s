@@ -1,11 +1,11 @@
-4:15 - 4:40 | Hammon
-4:40 - 5:30 | Draw out ISA more clear/ Understand Control Units// Work on Control Unit Logic
-ALU - Testing//
+//4:15 - 4:40 | Hammon
+//4:40 - 5:30 | Draw out ISA more clear/ Understand Control Units// Work on Control Unit Logic
+//ALU - Testing//
 
-5:30 - 8
+//5:30 - 8
 
-5:30 -
-CSE 160 ---->//
+//5:30 -
+//CSE 160 ---->//
 ---     ---->
 
 

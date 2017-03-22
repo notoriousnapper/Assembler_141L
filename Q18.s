@@ -10,6 +10,12 @@
 // r5 - Stores the 4-bit string
 // r6 -
 
+
+
+
+// Q18 Algorithm --> Histogram of frequency for XORs
+// 
+
 // Steps to add 1 without compromising a different add instruction format.
   load_inc r1 r2      //  Doubles as an "add 1 instruction" to first register
                        // %R1 has garbage value in this context

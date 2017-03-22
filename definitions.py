@@ -3,19 +3,19 @@ def getOp(opCode):
     ohmylord  = { #Thanks Audrey
     'add': 0,
     'and': 1,
-    'cmp': 2,
-    'mov': 3,
-    'mov_ei': 4,
+    'xor': 2,
+    'cmp': 3,
+    'mov': 4,
     'ld': 5,
     'st': 6,
-    'xor': 7,
-    'shf': 8,
+    'mov_ei': 7,
+    'mov_ie': 8,
     'mov_imm': 9,
-    'cmp_int': 10,
+    'shf': 10,
     'ba': 11,
     'ble': 12,
     'bne': 13,
-    'mov_ie': 14,
+    'cmp_int': 14,
     'halt': 15
     }
     return ohmylord[opCode]
