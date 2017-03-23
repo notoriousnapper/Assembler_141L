@@ -89,7 +89,7 @@ def transmute(word, lookup):
     # Algorithm
     # Case 1: If number is smaller than 32, mov_imm and mov_ei finish
 Labels = {
-    '1' : 21,
+    '1' : 24,
     '2' : 32,
     '3' : 96,
     'HARD' : 96,  #Should be a hard test case

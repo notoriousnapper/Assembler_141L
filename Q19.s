@@ -41,12 +41,12 @@
 			mov_ei  r7, i1
 			xor 		r7, r2 					// Result in r5
 
-      //##########  BEGINNING OF LOWEST LOOP ########
+      ##########  BEGINNING OF LOWEST LOOP ########
 			//Fill in code for bne
 			cmp_int 	r7, i0 					// If 0, continue to next iteration (JUMP TO END_INNER)
 		  bne			r7, 0, 1        // With Flag is the same as Branch Equals // Jump to FINISH_CHECK	// Assume r7 holds correct jump address
 
-			//##########  GET LSB ####################
+			##########  GET LSB ####################
 			mov_imm 1
 		  mov_ei  r7, i3				// For Anding, set r7 as 1
 			mov     r5, r2					// Mov from r5 into r2   // Safety Move
@@ -69,17 +69,19 @@
 		  mov_ei  r4, i2         // mov r3 to r4 to replace value
 			mov_imm 1
 			mov_ei  r3, i3
-		  add     r0, r3          // Increment OUTER Pointer #1 with 8
+		  add     r0, r3 // Increment OUTER Pointer with 8
 
-		  //############### END SWAP ##############################
+
 			//===SKIP_ADD:===/ // End of One Iteration of inner loop --->
-
-			// Increment INNER Pointer #2
+			// Increment PTR #2
 			mov_imm 8
 			mov_ei  r2, i3					// ***
 				//CALCULATE JUMP DISTANCE TO TOP
 		    // Calculate distance to Top into variable r7
-		  ba      r7, 0, 0
+		  ba      r7, 0, 0 //Jump to ...
+
+
+			===== END INNER ======
 
 
 

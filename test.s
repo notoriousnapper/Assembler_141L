@@ -24,14 +24,16 @@ mov_ie 		r7, i2 				// i2 will 148
 	cmp_int     r0, i2     			// ===OUTER:====
 	//==CALCULATE  BRANCH DISTANCE TO END
 	bne         r7, 0, 1 								// Jump to End ProgramEND_OUTER  // End program
-	ld 			    r5, r0       // Loads r0 into r5
 
+	  //############ INNER #################//
+		// Comes from bottom
 		cmp_int 	r1, i2 //Compare to 148/ / ===INNER:===
+
 		// If reached with end
 				//==CALCULATEBRANCH DISTANCE TO END_INNER
 		bne     r7, 1, 1     // Jumps to END_INNER
+	  ld 			r5, r0       // Loads same r0 into r5 // Might need to optimize placement
 		ld 			r6, r1       // Load New Byte To Compare
-		mov_ei   r3, i0					// Set Temp = 0
 
 		//====CHECKPOINT 2 - VALUES ===/
 
@@ -39,12 +41,21 @@ mov_ie 		r7, i2 				// i2 will 148
 		mov     r6, r2					// Ready Outer Byte
 		mov_ie  r5, i1					// Ready Inner Byte
 		mov_ei  r7, i1
-		xor 		r7, r2 					// Result in r5
+		xor 		r5, r2 					// Result in r5
+		mov_ei   r3, i0					// RESET TEMP HAMMOND
 
 		//##########  BEGINNING OF LOWEST LOOP ########
 		//Fill in code for bne
-		cmp_int 	r7, i0 					// If 0, continue to next iteration (JUMP TO END_INNER)
-		bne			r7, 0, 1        // With Flag is the same as Branch Equals // Jump to FINISH_CHECK	// Assume r7 holds correct jump address
+		//{-- calculations to 39
+		mov_imm 31
+		mov_ei r7, i3
+		mov_imm 9
+		mov_ei r2, i3
+		add r7, r2
+		//-- endCalculations}
+		cmp_int 	r5, i0 					// If 0, continue to next iteration (JUMP TO END_INNER)
+		bne			r7, 0, 1        // &SWAP, comparing Temp &40 -- but right at prepping for calcs
+													  //With Flag is the same as Branch Equals // Jump to FINISH_CHECK	// Assume r7 holds correct jump address
 
 		//##########  GET LSB ####################
 		mov_imm 1
@@ -55,20 +66,45 @@ mov_ie 		r7, i2 				// i2 will 148
 		add 		r3, r2					// Accumulator for Temp **
 		shf			r5, 0, 0				// Shift Right by 1
 
-
-		add     r1, r2 					     //===FINISH_CHECK:===/
-				//==CALCULATEBRANCH DISTANCE TO ^INNER
-		ba  		r7, 0, 0				//Jumps UP to INNER- goes negative
+   //########### FINISH CHECK: LABEL #############
+		//add     r1, r2 					     //===FINISH_CHECK:===/
+		mov_imm 23
+	  mov_ei r7, i3
+		ba  		r7, 0, 0				//NEXT LOW LEVEL SHIFT Cycle
 
 		///////////// END GET LSB SHIFTING ////////////////
 		///////////// SWAP TEMP WITH MAX IF GREATER //////
 
-		cmp r4, r3    								 //===END_INNER:===/
-		ble r7, 0, 1    //DOWN V// NOTE FLAG: should be bg  Branch forward to skip add
-		mov_ie  r3, i2         // mov r3 to r4 to replace value
-		mov_ei  r4, i2         // mov r3 to r4 to replace value
+		//{-- calculations to
+		mov_imm 31
+		mov_ei r7, i3
+		mov_imm 18
+		mov_ei r2, i3
+		add r7, r2
+		//-- endCalculations}
+		cmp r4, r3
+		ble r7, 0, 1    //DOWN V// Branch Forward if not greater BGE -- tougher
+		mov_ie  r3, i1         // mov r3 to r4 to replace value
+		mov_ei  r4, i1         // mov r3 to r4 to replace value
 		mov_imm 1
 		mov_ei  r3, i3
-		add     r0, r3          // Increment OUTER Pointer #1 with 8
+		add     r1, r3            //INCREMENT INNER POINTER
+
+		mov_imm 14
+	  mov_ei r7, i3
+		ba  r7, 0, 0							// &15 NEXT INNER LOOP CYCLE, NEXT BYTE
+		// Increment OUTER Pointer #1 with 8
 
 		//############### END SWAP ##############################
+		//==============END_INNER:======================//
+
+    // Increment OUTER LOOP
+		mov_imm 1
+		mov_ei r2, i3
+		add  r0, r2
+
+		mov_imm 12
+		mov_ei r7, i3
+		ba  r7, 0, 0
+
+		halt
