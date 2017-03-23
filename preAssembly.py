@@ -22,19 +22,25 @@
 from bitstring import Bits
 import definitions
 from definitions import getOp
+from branchTransmuter import transmute
 import argparse
-# from collections import defaultdict
+from collections import defaultdict
 
 parser = argparse.ArgumentParser()
 parser.add_argument('readFile')
 parser.add_argument('writeFile')
 args = parser.parse_args()
 
-registers = {
-    'i3' : 3
+BRANCHES = {
+    'bg' : 1, # Doesn't matter what values there are
+    'ble' : 1,
+    'be' : 2,
+    'bne' : 2,
+    'ba' : 3
 }
 
 LABELS = {} # To be instantiated in first runthrough
+LABELS['DEFAULT'] = 0
 
 def addComment(newWords):
     theOutputFile.write('    // ')
@@ -77,6 +83,22 @@ def assembleMachineCode(words, lineCount, theOutputFile):
         if(label.find(':')):  #Label has been found
           label = label.strip(':')
           LABELS[label] = lineCount
+
+    if wordCount == 2:
+        print "WORD"
+        print "**============="
+        print words[0]
+        print(BRANCHES.get(words[0]))
+        if(BRANCHES.get(words[0])!= None):
+            print "PASS"
+            branchLogic =  transmute(words, LABELS)
+            print branchLogic
+            for item in branchLogic:
+              theOutputFile.write(item + "\n")
+
+        #   val = "Success"
+        else:
+          print "Not A Branch Instruction"
         #   print LABELS[label]
         #   LABELS.append(word[1], lineCount)
     # elif wordCount == 2:  # Just Changing Branching
@@ -122,9 +144,8 @@ if __name__ == "__main__":
             if(cond): # if its a label or newline, don't increment
               lineCount += 1
     print "Collected Labels are: "
-    print LABELS["INNER:"]
-    print LABELS["LABEL:"]
-    # for x in LABELS:
-    #   print x
-    #   for y in LABELS[x]:
-    #     print (y)
+    # print LABELS["INNER"]
+    # print LABELS["LABEL"]
+    for x in LABELS:
+      print x + ": " + str(LABELS[x])
+    #   print LABELS[x]

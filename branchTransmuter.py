@@ -19,33 +19,33 @@ def generateConstantCode(address):
       result.append("mov_imm "  + "16")
       result.append("mov_ei r7, i3")
       #Brute force this, optimizations later
-      print "shift amount is: " + str(shiftAmt)
+    #   print "shift amount is: " + str(shiftAmt)
       for i in range(0, shiftAmt):
         result.append("shf r7," + " 0, "   + "1") #Multiple single shifts
-        print "Shifted Once"
+        # print "Shifted Once"
 
       #CASE 2:  Medium Immediates, just require one add
       if(leftOver != 0): #
         if(leftOver < 32):
-           print "Entering Case 2"
+        #    print "Entering Case 2"
            result.append("mov_imm " + str(leftOver))
-           result.append("mov_ie r6, i2")
-           result.append("mov_ei r6, i3")
-           result.append("add r7, r6")
-           result.append("mov_ei r6, i2") # To return whatever value was in r6
+           result.append("mov_ie r2, i2")
+           result.append("mov_ei r2, i3")
+           result.append("add r7, r2")
+           result.append("mov_ei r2, i2") # To return whatever value was in r2
         #CASE 3:  Large Immediates, Require multiple adds Ex: 98 - 64 = 34,
         else:
-           print "Entering Case 3"
-           result.append("mov_ie r6, i2") # Store r6 to return later
+        #    print "Entering Case 3"
+           result.append("mov_ie r2, i2") # Store r2 to return later
            temp = leftOver
            while (temp!=0) :
              leftOver = 31 if (temp >= 31) else temp
              result.append("mov_imm "  + str(leftOver))
              temp = temp - leftOver
-             result.append("mov_ei r6, i3")
-             result.append("add r7, r6")
+             result.append("mov_ei r2, i3")
+             result.append("add r7, r2")
         #ENDING FOR CASE 2 & 3
-        result.append("mov_ei r6, i2") # To return r6's value
+        result.append("mov_ei r2, i2") # To return r2's value
     #CLOSING LINE WITH BRANCH GENERATED OUTSIDE THIS FUNCTION
     return result
 
@@ -73,18 +73,23 @@ def transmute(word, lookup):
     else:
         branchI = word[0]
 
-    print generateConstantCode(lookup[label])
-    print branchI + " r7, " + str(flag)
+    # print generateConstantCode(lookup[label])
+    # print branchI + " r7, " + str(flag)
+    result = generateConstantCode(lookup[label])
+    finalStr = branchI + " r7, " + " 0, " +  str(flag)
+    result.append(finalStr)
+
+    # print result
+    return result
     # print branchI
     # print word[1]
 
-    temp = 0;
     #print lookup[label]
 
     # Algorithm
     # Case 1: If number is smaller than 32, mov_imm and mov_ei finish
 Labels = {
-    '1' : 31,
+    '1' : 21,
     '2' : 32,
     '3' : 96,
     'HARD' : 96,  #Should be a hard test case
@@ -92,7 +97,9 @@ Labels = {
     'YO' : 164,
 }
 
-transmute(["be", "1"], Labels);
-transmute(["be", "2"], Labels);
-transmute(["bg", "3"], Labels);
-# transmute(["ble", "CHECK"], Labels);
+res = transmute(["be", "1"], Labels);
+for item in res:
+  print item
+# transmute(["be", "2"], Labels);
+# transmute(["bg", "3"], Labels);
+# # transmute(["ble", "CHECK"], Labels);

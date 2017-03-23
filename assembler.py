@@ -27,6 +27,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('readFile')
 parser.add_argument('writeFile')
+parser.add_argument('comment')
 args = parser.parse_args()
 
 registers = {
@@ -44,13 +45,15 @@ registers = {
     'i3' : 3
 }
 
-def addComment(newWords):
-    theOutputFile.write('    // ')
-    for word in newWords:
-        theOutputFile.write(word + ' ')
+def addComment(commentOn, newWords):
+    if commentOn:
+      theOutputFile.write('    // ')
+      for word in newWords:
+          theOutputFile.write(word + ' ')
+          
     theOutputFile.write('\n')
 
-def assembleMachineCode(words, theOutputFile):
+def assembleMachineCode(commentOn, words, theOutputFile):
     # for removing comments from each line
     comment = False
     newWords = []
@@ -75,10 +78,15 @@ def assembleMachineCode(words, theOutputFile):
 
     # halt (x type)
     if wordCount == 1:
-        op = getOp(newWords[0])
-        theOutputFile.write(format(op, 'b').zfill(4))   #b means write in binary
-        theOutputFile.write(format(0, 'b').zfill(5))
-        addComment(newWords)
+        if (newWords[0].find(":")!=-1):
+          print "FLAG"
+          #Its a Label!
+          addComment(commentOn,newWords)
+        else:
+          op = getOp(newWords[0])
+          theOutputFile.write(format(op, 'b').zfill(4))   #b means write in binary
+          theOutputFile.write(format(0, 'b').zfill(5))
+          addComment(commentOn,newWords)
 
     # IJ types
     elif wordCount == 2:
@@ -91,7 +99,7 @@ def assembleMachineCode(words, theOutputFile):
         # theOutputFile.write(str(Bits(int = immediate, length = 5).bin))
         print "Success"
         theOutputFile.write(format(immediate, 'b').zfill(5))
-        addComment(newWords)
+        addComment(commentOn,newWords)
 
     # R and H types
     elif wordCount == 3:
@@ -106,7 +114,7 @@ def assembleMachineCode(words, theOutputFile):
         theOutputFile.write(format(op, 'b').zfill(4))
         theOutputFile.write(format(reg1, 'b').zfill(3))
         theOutputFile.write(format(reg2, 'b').zfill(2))
-        addComment(newWords)
+        addComment(commentOn,newWords)
         print("should print 4")
 
     # F types
@@ -121,7 +129,7 @@ def assembleMachineCode(words, theOutputFile):
         theOutputFile.write(format(reg1, 'b').zfill(3))
         theOutputFile.write(format( amt, 'b').zfill(1))
         theOutputFile.write(format( direction, 'b').zfill(1))
-        addComment(newWords)
+        addComment(commentOn,newWords)
 
     #else:
     #    theOutputFile.write('\n')
@@ -134,7 +142,9 @@ if __name__ == "__main__":
     # input: SampleASM.s
     # output: machineCode.txt
     with open(args.readFile) as theInputFile, open(args.writeFile, 'w') as theOutputFile:
-        lineCount = 1
+        commentOn = (args.comment == "y")
+        print "COMMENTS" + str(commentOn)
+        lineCount = 0
         for line in theInputFile:
             print("Assembling line %d" % lineCount)
             # print line
@@ -142,7 +152,7 @@ if __name__ == "__main__":
 
             # try/catch
             try:
-                assembleMachineCode(words, theOutputFile)
+                assembleMachineCode( commentOn, words, theOutputFile)
             except:
                 print("Error at line %d" % lineCount)
                 break

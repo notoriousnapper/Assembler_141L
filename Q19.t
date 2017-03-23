@@ -7,20 +7,21 @@
 	mov_imm  18
 	mov_ei  r7, i1
   shf     r7, 1, 1
-	mov_ie 		r7, i2 				// i2 will hold 288
+
+	mov_imm  18
+	//mov_ie 		r7, i2 				// i2 will hold 288  // I cant just throw i2 around, I can throw i1 around tho
+	//Need a temporary load ---> to compare if i1 is greater than 20.
+
+
 	  // R5 starts at 0
 	  cmp_int     r0, i2     			// ===OUTER:====
 		//==CALCULATEBRANCH DISTANCE TO END
 	  bne         r7, 0, 1 								// Jump to End ProgramEND_OUTER  // End program
 		ld 			    r5, r0       // Loads r0 into r5
-
 	  mov_imm   #(Difference between InnerLoop and END)
 	  mov_ei     r7, i3
-
 		  cmp_int 	r1, i2           // ===INNER:===
 			// If reached with end
-
-
 		  		//==CALCULATEBRANCH DISTANCE TO END_INNER
 		  bne     r7, 1, 1     // Jumps to END_INNER
 			ld 			r6, r1       // Load New Byte To Compare
@@ -50,7 +51,6 @@
 			ba  		r7, 0, 1				//Jumps UP to INNER- goes negative
 		  // If TEMP Dist > Max Hammond distance, Add
 
-
 		  cmp r4, r3    								 //===END_INNER:===/
 			    // CALCULATE BRANCH DISTANCE TO FORWARD
 		  ble r7, 0, 1			// NOTE FLAG: should be bg  Branch forward to skip add
@@ -64,7 +64,7 @@
 			mov_ei  r2, i3					// ***
 				//CALCULATE JUMP DISTANCE TO TOP
 		  // Calculate distance to Top into variable r7
-		  ba      r7   0
+		  ba      r7,   0, 1
 
 	  //  TBD: Get memory address to store in to --> r7
 		mov r4, r2 							         //===END_OUTER:===//
