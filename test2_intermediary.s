@@ -38,15 +38,15 @@ mov_ie  r2, i2
 //=========== OUTER: ===================/
 ld   r5, r0
 cmp  r0, r1
-bne  r7, 0, 1      // JUMP to OUTER_END if 32 reaches 64
+bne  r7, 0, 1    // JUMP to OUTER_END if 32 reaches 64
 
 //=========== INNER: ===================/
 mov_imm 31     // 47  //} START_CALC
 mov_ei  r7, i3
 mov_imm 15
 mov_ei  r2, i3
-add     r7, r2
-cmp_int r4, i1    //} END_CALC
+add     r7, r2  //} END_CALC
+cmp_int r4, i1
 bne     r7, 0, 1  // Jumps to INNER_END to move to outer iteration
 
 //========== SHIFTING & BITMASKING =========== //
@@ -57,7 +57,7 @@ bne     r7, 0, 1  // Jumps to INNER_END to move to outer iteration
 
                 mov_imm 31
                 mov_ei  r7, i3
-                mov_imm 7
+                mov_imm 8
                 mov_ei  r2, i3
                 add     r7, r2
 
@@ -80,10 +80,25 @@ bne     r7, 0, 1  // Jumps to INNER_END to move to outer iteration
 
 //=========== INNER_END: ===================//
 
-//=== UPDATE HISTOGRAM ==== //
 
+mov_imm 4
+mov_ei  r7, i3
+shf     r7, 1, 1  // Get Address of Skip 68
+mov_imm 4
+mov_ei  r2, i3
+add     r7, r2
+
+
+mov_imm 0
+mov_ei  r2, i3    // Get 0 to compare with R6
+
+cmp     r6, r2
+bne     r7, 0, 1       // JUMP TO SKIP if 0 matches found
+
+//=== UPDATE HISTOGRAM ==== //
 mov_imm 9
 mov_ei  r7, i3
+mov     r6, r2
 add     r7, r2  // get address 9 + matched freq (count)
 mov     r7, r2
 ld      r7, r2  // Load original value into r7
@@ -91,12 +106,12 @@ ld      r7, r2  // Load original value into r7
 mov_imm 1
 mov_ei  r3, i3
 add     r7, r3
-st      r7, r2  // Store incremented value back in 
+st      r7, r2  // Store incremented value back in
 
 //=== SKIP HISTOGRAM UPDATE ==== //
-// Reset r6
 mov_imm 0
-mov_ei  r6, i3  // Reset temp
+mov_ei  r6, i3  // Reset R6
+mov_ei  r4, i3  // Reset Shift Amt
 
 
 mov_imm 1
@@ -113,5 +128,4 @@ mov_ei   r1, i3
 st       r6, r1
 
 //=========== OUTER_END: ===================//
-
 halt  // Literally just end
