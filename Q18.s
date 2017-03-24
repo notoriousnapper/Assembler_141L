@@ -1,3 +1,14 @@
+
+//Algorithm
+//
+// Load 4 byte into register, append 4 0's in front
+
+
+
+
+
+
+
 // Internal Reg
 // i1 - Counter 1
 // i2 - Counter 2
@@ -14,7 +25,7 @@
 
 
 // Q18 Algorithm --> Histogram of frequency for XORs
-// 
+//
 
 // Steps to add 1 without compromising a different add instruction format.
   load_inc r1 r2      //  Doubles as an "add 1 instruction" to first register

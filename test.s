@@ -27,10 +27,17 @@ mov_ie 		r7, i2 				// i2 will 148
 
 	  //############ INNER #################//
 		// Comes from bottom
-		cmp_int 	r1, i2 //Compare to 148/ / ===INNER:===
 
-		// If reached with end
-				//==CALCULATEBRANCH DISTANCE TO END_INNER
+		// If reached with end // Added 6 instructions
+		mov_imm 4
+		mov_ei  r7, i3
+		shf     r7, 1, 1
+		mov_imm 0
+		mov_ei  r2, i3
+		add     r7, r2
+		// Jump to 65
+				//==CALCULATE    BRANCH DISTANCE TO END_INNER
+		cmp_int 	r1, i2 //Compare to 148/ / ===INNER:===
 		bne     r7, 1, 1     // Jumps to END_INNER
 	  ld 			r5, r0       // Loads same r0 into r5 // Might need to optimize placement
 		ld 			r6, r1       // Load New Byte To Compare
@@ -49,12 +56,13 @@ mov_ie 		r7, i2 				// i2 will 148
 		//{-- calculations to 39
 		mov_imm 31
 		mov_ei r7, i3
-		mov_imm 9
+		mov_imm 15
 		mov_ei r2, i3
 		add r7, r2
 		//-- endCalculations}
-		cmp_int 	r5, i0 					// If 0, continue to next iteration (JUMP TO END_INNER)
-		bne			r7, 0, 1        // &SWAP, comparing Temp &40 -- but right at prepping for calcs
+		cmp_int 	r5, i0 					// If 0, continue to next iteration (JUMP TO HAMMOND TEMP CHECK/SWAP)
+														// JUMPING DOWN
+		bne			r7, 0, 1        // &SWAP, comparing Temp &46 to __ instruction -- but right at prepping for calcs
 													  //With Flag is the same as Branch Equals // Jump to FINISH_CHECK	// Assume r7 holds correct jump address
 
 		//##########  GET LSB ####################
@@ -68,7 +76,7 @@ mov_ie 		r7, i2 				// i2 will 148
 
    //########### FINISH CHECK: LABEL #############
 		//add     r1, r2 					     //===FINISH_CHECK:===/
-		mov_imm 23
+		mov_imm 29
 	  mov_ei r7, i3
 		ba  		r7, 0, 0				//NEXT LOW LEVEL SHIFT Cycle
 
@@ -78,7 +86,7 @@ mov_ie 		r7, i2 				// i2 will 148
 		//{-- calculations to
 		mov_imm 31
 		mov_ei r7, i3
-		mov_imm 18
+		mov_imm 24
 		mov_ei r2, i3
 		add r7, r2
 		//-- endCalculations}
@@ -103,8 +111,15 @@ mov_ie 		r7, i2 				// i2 will 148
 		mov_ei r2, i3
 		add  r0, r2
 
+    //  Jump to OUTER LOOP START
 		mov_imm 12
 		mov_ei r7, i3
-		ba  r7, 0, 0
+		// Reset new internal register, but from ptr 1!  Because MATH
+		// Increment new ---> Outer Pointer, and new inner pointer to beginning of new outer
+		mov_imm 1
+		mov_ei  r2, i3
+		add     r0, r2
+		mov 		r0, r1
+		ba  		r7, 0, 0
 
 		halt
